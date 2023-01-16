@@ -17,8 +17,7 @@ public class BotController {
     Yad2Service yad2Service;
 
     @RequestMapping(value = "/yad2", method = RequestMethod.GET)
-    public ResponseEntity<?> getApartments(@RequestParam String keyword)
-    {
+    public ResponseEntity<?> getApartments(@RequestParam String keyword) {
         return new ResponseEntity<>(yad2Service.searchApartments(keyword), HttpStatus.OK);
     }
 }
