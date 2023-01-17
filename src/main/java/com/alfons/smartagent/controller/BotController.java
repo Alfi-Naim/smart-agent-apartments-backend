@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/bot")
 public class BotController {
@@ -17,7 +19,10 @@ public class BotController {
     Yad2Service yad2Service;
 
     @RequestMapping(value = "/yad2", method = RequestMethod.GET)
-    public ResponseEntity<?> getApartments(@RequestParam String keyword) {
-        return new ResponseEntity<>(yad2Service.searchApartments(keyword), HttpStatus.OK);
+//    public ResponseEntity<?> getApartments() throws IOException {
+    public ResponseEntity<?> getApartments(@RequestParam String city) throws IOException {
+        //TODO from city name to city id
+//        return new ResponseEntity<>(yad2Service.searchApartments(city, type, maximumPrice), HttpStatus.OK);
+        return new ResponseEntity<>(yad2Service.searchApartments(city, "apartments", "5000"), HttpStatus.OK);
     }
 }
