@@ -1,9 +1,6 @@
 package com.alfons.smartagent.model;
 
-import com.sun.istack.NotNull;
-import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 
 @Entity
@@ -12,11 +9,11 @@ public class Apartment implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private Long id;
-
-    @NotNull
+    @Column(nullable = false, updatable = false)
     private String postId;
+
+    @Column(nullable = false, updatable = false)
+    private String searchId;
 
     private String street;
 
@@ -29,14 +26,6 @@ public class Apartment implements Serializable {
     private String squareMeters;
 
     private String link;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getPostId() {
         return postId;
@@ -94,10 +83,18 @@ public class Apartment implements Serializable {
         this.link = link;
     }
 
+    public String getSearchId() {
+        return searchId;
+    }
+
+    public void setSearchId(String searchId) {
+        this.searchId = searchId;
+    }
+
 
     public static final class ApartmentBuilder {
-        private Long id;
         private String postId;
+        private String searchId;
         private String street;
         private String price;
         private String rooms;
@@ -112,13 +109,13 @@ public class Apartment implements Serializable {
             return new ApartmentBuilder();
         }
 
-        public ApartmentBuilder id(Long id) {
-            this.id = id;
+        public ApartmentBuilder postId(String postId) {
+            this.postId = postId;
             return this;
         }
 
-        public ApartmentBuilder postId(String postId) {
-            this.postId = postId;
+        public ApartmentBuilder searchId(String searchId) {
+            this.searchId = searchId;
             return this;
         }
 
@@ -154,8 +151,8 @@ public class Apartment implements Serializable {
 
         public Apartment build() {
             Apartment apartment = new Apartment();
-            apartment.setId(id);
             apartment.setPostId(postId);
+            apartment.setSearchId(searchId);
             apartment.setStreet(street);
             apartment.setPrice(price);
             apartment.setRooms(rooms);

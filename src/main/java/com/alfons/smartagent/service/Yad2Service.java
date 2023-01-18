@@ -1,5 +1,8 @@
 package com.alfons.smartagent.service;
 
+import com.alfons.smartagent.model.ApartmentsFeed;
+import com.alfons.smartagent.model.Neighborhood;
+import com.alfons.smartagent.model.Root;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.OkHttpClient;
@@ -12,6 +15,7 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class Yad2Service {
@@ -21,14 +25,9 @@ public class Yad2Service {
     @Autowired
     ObjectMapper om;
 
-    public String searchApartments(String city, String type, String maxPrice) throws IOException {
-//        String cityId = getCityId(city);
-        String cityId = "2200";
+    public ApartmentsFeed searchApartments(String city, String type, String maxPrice) throws IOException {
+        String cityId = getCityId(city);
         return getApartments(cityId, type, maxPrice);
-    }
-
-    public static String urlEncodeUTF8(String s) {
-        return URLEncoder.encode(s, StandardCharsets.UTF_8);
     }
 
     private String getCityId(String city) throws IOException {
@@ -56,9 +55,9 @@ public class Yad2Service {
         return neighborhoods.get(0).getValue().getCity();
     }
 
-    private String getApartments(String cityId, String type, String maxPrice) throws IOException {
+    private ApartmentsFeed getApartments(String cityId, String type, String maxPrice) throws IOException {
         Request request = new Request.Builder()
-                .url("https://gw.yad2.co.il/feed-search-legacy/realestate/rent?city=" + cityId + "&propertyGroup=apartments&property=1&price=-1-5555&forceLdLoad=true")
+                .url("https://gw.yad2.co.il/feed-search-legacy/realestate/" + type + "?city=" + cityId + "&price=-1-" + maxPrice + "&forceLdLoad=true")
                 .method("GET", null)
                 .addHeader("Accept", "application/json, text/plain, */*")
                 .addHeader("Accept-Language", "he-IL,he;q=0.9,en-US;q=0.8,en;q=0.7")
@@ -79,141 +78,10 @@ public class Yad2Service {
         Response response = client.newCall(request).execute();
         String res = response.body().string();
         Root root = om.readValue(res, Root.class);
-        return root.getData().getFeed().toString();
+        return root.getData().getFeed();
     }
 
-    static class Root {
-        ApartmentsData data;
-
-        public ApartmentsData getData() {
-            return data;
-        }
-    }
-
-    static class ApartmentsData {
-
-        ApartmentsFeed feed;
-
-        public ApartmentsFeed getFeed() {
-            return feed;
-        }
-    }
-
-    static class ApartmentsFeed {
-
-        List<FeedItem> feed_items;
-        int current_page;
-        int page_size;
-        int total_items;
-        int total_pages;
-
-        public List<FeedItem> getFeed_items() {
-            return feed_items;
-        }
-
-        public int getCurrent_page() {
-            return current_page;
-        }
-
-        public int getPage_size() {
-            return page_size;
-        }
-
-        public int getTotal_items() {
-            return total_items;
-        }
-
-        public int getTotal_pages() {
-            return total_pages;
-        }
-
-        @Override
-        public String toString() {
-            return  "{\n" +
-                    "\"Items\":" + feed_items + ",\n" +
-                    "\"searchInfo\" : {" + "\n" +
-                    "\"currentPage\":\"" + current_page + "\",\n" +
-                    "\"pageSize=\":\"" + page_size + "\",\n" +
-                    "\"totalItems=\":\"" + total_items + "\",\n" +
-                    "\"totalPages=\":\"" + total_pages + "\",\n" +
-                    "}\n" +
-                    "}";
-        }
-    }
-
-    static class FeedItem {
-
-        String id;
-        String street;
-        String line_1;
-        String line_2;
-        String price;
-        String link;
-        int square_meters;
-
-        public FeedItem(String id, String street, String line_1, String line_2, String price, int square_meters) {
-            this.id = id;
-            this.street = street;
-            this.line_1 = line_1;
-            this.line_2 = line_2;
-            this.price = price;
-            this.square_meters = square_meters;
-            this.link = "https://www.yad2.co.il/item/" + this.id;
-
-            if(street != null) this.street = street.replace("\"","");
-        }
-
-        public String getLine_1() {
-            return line_1;
-        }
-
-        public String getLine_2() {
-            return line_2;
-        }
-
-        public int getSquare_meters() {
-            return square_meters;
-        }
-
-        public String getPrice() {
-            return price;
-        }
-
-        public String getStreet() {
-            return street;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        @Override
-        public String toString() {
-            return "\n{" + "\n" +
-                    "\"id\":\"" + id + "\"," + "\n" +
-                    "\"street\":\"" + street + "\"," + "\n" +
-                    "\"rooms\":\"" + line_1 + "\"," + "\n" +
-                    "\"floor\":\"" + line_2 + "\"," + "\n" +
-                    "\"squareMeters\":\"" + square_meters + "\"," + "\n" +
-                    "\"price\":\"" + price + "\"," + "\n" +
-                    "\"link\":\"" + link + "\"" + "\n" +
-                    "}";
-        }
-    }
-
-    static class Neighborhood {
-        NeighborhoodValue value;
-
-        public NeighborhoodValue getValue() {
-            return value;
-        }
-    }
-
-    static class NeighborhoodValue {
-        String city;
-
-        public String getCity() {
-            return city;
-        }
+    public static String urlEncodeUTF8(String s) {
+        return URLEncoder.encode(s, StandardCharsets.UTF_8);
     }
 }
