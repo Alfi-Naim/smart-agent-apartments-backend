@@ -5,11 +5,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
-import java.util.Collection;
 import java.util.List;
 
 public interface ApartmentRepository extends CrudRepository<Apartment,Long> {
 
-//    @Query("SELECT a FROM apartments a WHERE a.searchId = :searchId")
-//    List<Apartment> findApartmentsBySearchId(@Param("searchId") String searchId);
+    @Query("SELECT a FROM Apartment a WHERE a.searchId = :searchId")
+    List<Apartment> findApartmentsBySearchId(@Param("searchId") String searchId);
 }

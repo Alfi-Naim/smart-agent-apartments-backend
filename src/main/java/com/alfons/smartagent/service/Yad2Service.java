@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Random;
 
 @Service
 public class Yad2Service {
@@ -25,9 +24,9 @@ public class Yad2Service {
     @Autowired
     ObjectMapper om;
 
-    public ApartmentsFeed searchApartments(String city, String type, String maxPrice) throws IOException {
+    public ApartmentsFeed searchApartments(String city, String type, String minPrice, String maxPrice) throws IOException {
         String cityId = getCityId(city);
-        return getApartments(cityId, type, maxPrice);
+        return getApartments(cityId, type, minPrice, maxPrice);
     }
 
     private String getCityId(String city) throws IOException {
@@ -55,9 +54,9 @@ public class Yad2Service {
         return neighborhoods.get(0).getValue().getCity();
     }
 
-    private ApartmentsFeed getApartments(String cityId, String type, String maxPrice) throws IOException {
+    private ApartmentsFeed getApartments(String cityId, String type,String minPrice, String maxPrice) throws IOException {
         Request request = new Request.Builder()
-                .url("https://gw.yad2.co.il/feed-search-legacy/realestate/" + type + "?city=" + cityId + "&price=-1-" + maxPrice + "&forceLdLoad=true")
+                .url("https://gw.yad2.co.il/feed-search-legacy/realestate/" + type + "?city=" + cityId + "&price=" + minPrice + "-" + maxPrice + "&forceLdLoad=true")
                 .method("GET", null)
                 .addHeader("Accept", "application/json, text/plain, */*")
                 .addHeader("Accept-Language", "he-IL,he;q=0.9,en-US;q=0.8,en;q=0.7")

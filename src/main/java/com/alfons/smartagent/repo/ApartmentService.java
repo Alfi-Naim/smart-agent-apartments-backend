@@ -2,8 +2,10 @@ package com.alfons.smartagent.repo;
 
 import com.alfons.smartagent.model.Apartment;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,5 +28,9 @@ public class ApartmentService {
 
     public void delete(Apartment apartment) {
         repository.delete(apartment);
+    }
+
+    public List<Apartment> findBySearchId(String searchId){
+        return repository.findApartmentsBySearchId(searchId);
     }
 }

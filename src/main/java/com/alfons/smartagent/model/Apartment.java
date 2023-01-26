@@ -17,6 +17,8 @@ public class Apartment implements Serializable {
 
     private String street;
 
+    private String neighborhood;
+
     private String price;
 
     private String rooms;
@@ -26,6 +28,14 @@ public class Apartment implements Serializable {
     private String squareMeters;
 
     private String link;
+
+    public String getNeighborhood() {
+        return neighborhood;
+    }
+
+    public void setNeighborhood(String neighborhood) {
+        this.neighborhood = neighborhood;
+    }
 
     public String getPostId() {
         return postId;
@@ -101,6 +111,7 @@ public class Apartment implements Serializable {
         private String floor;
         private String squareMeters;
         private String link;
+        private String neighborhood;
 
         private ApartmentBuilder() {
         }
@@ -111,6 +122,11 @@ public class Apartment implements Serializable {
 
         public ApartmentBuilder postId(String postId) {
             this.postId = postId;
+            return this;
+        }
+
+        public ApartmentBuilder neighborhood(String neighborhood) {
+            this.neighborhood = neighborhood;
             return this;
         }
 
@@ -154,6 +170,7 @@ public class Apartment implements Serializable {
             apartment.setPostId(postId);
             apartment.setSearchId(searchId);
             apartment.setStreet(street);
+            apartment.setNeighborhood(neighborhood);
             apartment.setPrice(price);
             apartment.setRooms(rooms);
             apartment.setFloor(floor);
